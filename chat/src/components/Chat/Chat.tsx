@@ -21,7 +21,7 @@ const Chat = () => {
 
             if (lastDate && new Date(newLastDate) === new Date(lastDate)) return;
             else {
-                setMessages(data);
+                setMessages(data.reverse());
             }
         }
         fetchData();
@@ -33,7 +33,7 @@ const Chat = () => {
         style={{
           height: "70vh",
         }}
-        className="d-flex p-2 flex-column gap-3 align-items-center overflow-y-scroll"
+        className="d-flex p-2 flex-column-reverse gap-3 align-items-center overflow-y-scroll"
       >
         {messages.map((message) => (
           <Message
