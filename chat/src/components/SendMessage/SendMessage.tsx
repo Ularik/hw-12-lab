@@ -11,14 +11,19 @@ const SendMessage = () => {
 
         data.set("message", message);
         data.set("author", "Joma");
-        console.log(data);
 
-        const result = await fetch(url, {
-          method: "POST",
-          body: data,
-        });
-        const response = await (result.json());
-        console.log(response)
+        try {
+          const result = await fetch(url, {
+            method: "POST",
+            body: data,
+          });
+          await result.json();
+        } catch {
+          console.log('Ошибка на сервере');
+        } finally {
+          setMessage('');
+        }
+        
     }
     return (
       <div className="container">

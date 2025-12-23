@@ -7,7 +7,7 @@ const Chat = () => {
     const url = "http://146.185.154.90:8000/messages";
     useEffect(() => {
         let interval: number | undefined = undefined;
-        const [lastDate, setLastDate] = useState('')
+        let lastDate: undefined | string = undefined;
 
         const fetchData = async () => {
             console.log('Делаем запрос на сервер');
@@ -15,18 +15,17 @@ const Chat = () => {
             if (lastDate) {
                 localUrl = `${url}/?datetime=${lastDate}`
             }
-            const result = await fetch(localUrl);
-            const data = await result.json();
-            const newLastDate = data[data.length - 1].datetime;
-            
-            if (
-              lastDate &&
-              new Date(newLastDate).getTime() === new Date(lastDate).getTime()
-            ) {
-            } else {
-              const newMessages = [...data].reverse();
-              setMessages((prev) => [...prev, ...newMessages].slice(-15));
-              setLastDate(newLastDate);
+
+            try {
+              const result = await fetch(localUrl);
+              const data = await result.json();
+              if (data.length !== 0) {
+                const newLastDate = data[data.length - 1].datetime;
+                setMessages((prev) => [...prev, ...data].slice(-15).reverse());
+                lastDate = newLastDate;
+              }
+            } catch {
+              console.log('Ошибка на сервере!');
             }
         }
         fetchData();
