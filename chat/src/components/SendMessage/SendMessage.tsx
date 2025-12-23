@@ -7,16 +7,15 @@ const SendMessage = () => {
     const postMessage = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         if (message.trim() === '') return
-        const data = {
-            message: message,
-            author: 'Joma'
-        }
+        const data = new URLSearchParams();
+
+        data.set("message", message);
+        data.set("author", "Joma");
+        console.log(data);
+
         const result = await fetch(url, {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json;charset=utf-8",
-          },
-          body: JSON.stringify(data),
+          body: data,
         });
         const response = await (result.json());
         console.log(response)

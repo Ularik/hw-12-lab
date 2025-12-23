@@ -2,13 +2,13 @@ import { useEffect, useState } from "react";
 import Message from "./Message/Message";
 
 const Chat = () => {
-    const [messages, setMessages] = useState<Message[]>([])
-    let lastDate = '';
-
-    let interval: number | undefined = undefined;
+    const [messages, setMessages] = useState<Message[]>([]);
 
     const url = "http://146.185.154.90:8000/messages";
     useEffect(() => {
+        let interval: number | undefined = undefined;
+        const [lastDate, setLastDate] = useState('')
+
         const fetchData = async () => {
             console.log('Делаем запрос на сервер');
             let localUrl = url;
@@ -18,14 +18,22 @@ const Chat = () => {
             const result = await fetch(localUrl);
             const data = await result.json();
             const newLastDate = data[data.length - 1].datetime;
-
-            if (lastDate && new Date(newLastDate) === new Date(lastDate)) return;
-            else {
-                setMessages(data.reverse());
+            
+            if (
+              lastDate &&
+              new Date(newLastDate).getTime() === new Date(lastDate).getTime()
+            ) {
+            } else {
+              const newMessages = [...data].reverse();
+              setMessages((prev) => [...prev, ...newMessages].slice(-15));
+              setLastDate(newLastDate);
             }
         }
         fetchData();
-        if (interval === undefined) interval = setInterval(fetchData, 5000);
+        interval = setInterval(fetchData, 5000);
+        return () => {
+            clearInterval(interval);
+        }
     }, [])
 
     return (
