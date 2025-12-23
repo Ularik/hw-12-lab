@@ -10,7 +10,6 @@ const Chat = () => {
         let lastDate: undefined | string = undefined;
 
         const fetchData = async () => {
-            console.log('Делаем запрос на сервер');
             let localUrl = url;
             if (lastDate) {
                 localUrl = `${url}/?datetime=${lastDate}`
@@ -29,7 +28,7 @@ const Chat = () => {
             }
         }
         fetchData();
-        interval = setInterval(fetchData, 5000);
+        interval = setInterval(fetchData, 3000);
         return () => {
             clearInterval(interval);
         }
